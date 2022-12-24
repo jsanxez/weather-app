@@ -28,42 +28,42 @@
                <li class="nav-item"></li>
                <li class="nav-item"></li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="text" maxlength="5" placeholder="Zip Code" aria-label="Zip Code">
+            <form method="get"  action="/weather/" class="form-inline my-2 my-lg-0">
+                <input name="zipcode" class="form-control mr-sm-2" type="text" maxlength="5" placeholder="Zip Code" aria-label="Zip Code">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
          </div>
       </nav>
+
       <footer class="footer">
          <ul class="list-group" style="">
-            <li class="list-group-item">Miami Beach Florida<button type="button" class="btn btn-default" style="display: inline; float: right;">X</button></li>
-            <li class="list-group-item">
-               Austin Texas<button type="button" class="btn btn-default" style="display: inline; float: right;">X</button>
-            </li>
-            <li class="list-group-item">Williamsburg Virginia<button type="button" class="btn btn-default" style="display: inline; float: right;">X</button></li>
+             <li class="list-group-item">Miami Florida</li>
+             <li class="list-group-item"> Austin Texas<button type="button" class="btn btn-default" style="display: inline; float: right;">X</button></li>
+             <li class="list-group-item">Williamsburg Virginia<button type="button" class="btn btn-default" style="display: inline; float: right;">X</button></li>
          </ul>
-         <p contenteditable="true" spellcheckker="false">
+
+         <p contenteditable="true">
+         {% if weather is not defined %}
+         <div class="card" style="margin-top: 30px; display: none">
+         {% else %}
          <div class="card" style="margin-top: 30px;">
             <div class="card" style="margin-top: 0px;">
                <div class="card-body" style="margin-top: 0px;">
                   <h4 class="card-title">
-                     <b>Los Angeles California</b>
+                      <b>{{weather.city}}</b>
                   </h4>
 
                   <div class="row" style="">
                         <div class="col-sm-4">
-                           <h1>
-                              72°
-                              <h6 style="">Fair</h6>
-                           </h1>
+                            <h1>{{weather.temperature}}° <h6 style="">{{weather.description}}</h6> </h1>
                         </div>
                         <div class="col-sm-4 col-5">
                            <h3></h3>
                         </div>
                         <div class="col-sm-4">
                            <h5 style="">Precipitation 7%</h5>
-                           <h5 style="">Humidity 90%</h5>
-                           <h5 style="">Wind 8 mph</h5>
+                           <h5 style="">Humidity {{weather.humidity}}%</h5>
+                           <h5 style="">Wind {{weather.wind}} mph</h5>
                            <div class="row" style="">
                               <div class="col-sm-4"></div>
                               <div class="col-sm-4 col-5"></div>
@@ -76,6 +76,7 @@
                </div>
             </div>
          </div>
+         {% endif %}
       </footer>
    </div>
 </body>
