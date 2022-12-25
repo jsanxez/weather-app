@@ -1,7 +1,7 @@
 from typing import Union
 import requests
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 
@@ -13,10 +13,13 @@ templates = Jinja2Templates(directory="templates")
 api_key = "655dfc390726be35679ee1f171b45301"
 default_country = 'us'
 
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: Union[bool, None]=None
+favorite_weather = {}
+
+"""
+class FavoriteWeather(BaseModel):
+    zipcode: str
+    city: str
+"""
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -27,7 +30,8 @@ async def read_root(request: Request):
 async def get_zipcode_weather(request: Request, zipcode: str):
     weather_data = requests.get(f"https://api.openweathermap.org/data/2.5/weather?zip={zipcode},{default_country}&units=metric&appid={api_key}")
     weather_data = weather_data.json()
-    requested_weather = {"city": weather_data['name'],
+    requested_weather = {"zipcode": zipcode,
+                         "city": weather_data['name'],
                           "temperature": weather_data['main']['temp'],
                           "description": weather_data['weather'][0]['description'],
                           "humidity": weather_data['main']['humidity'],
@@ -35,7 +39,17 @@ async def get_zipcode_weather(request: Request, zipcode: str):
                           }
     return templates.TemplateResponse("index.html", {"request": request, "weather": requested_weather})
 
-@app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id}
+@app.post("/add/", response_class=HTMLResponse)
+async def add_favorite_weather(request: Request, zipcode: str=Form(), city: str=Form()):
+    favorite_weather[zipcode] = {'city': city}
+    return templates.TemplateResponse("index.html", {"request": request,
+                                                     "favorite_weather":
+                                                     favorite_weather})
+
+@app.get("/delete/{zipcode}", response_class=HTMLResponse)
+async def delete_favorite_weather(request: Request, zipcode: str):
+    del favorite_weather[zipcode]
+    return templates.TemplateResponse("index.html", {"request": request,
+                                                     "favorite_weather":
+                                                     favorite_weather})
 

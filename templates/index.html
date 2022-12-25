@@ -36,10 +36,14 @@
       </nav>
 
       <footer class="footer">
-         <ul class="list-group" style="">
-             <li class="list-group-item">Miami Florida</li>
-             <li class="list-group-item"> Austin Texas<button type="button" class="btn btn-default" style="display: inline; float: right;">X</button></li>
-             <li class="list-group-item">Williamsburg Virginia<button type="button" class="btn btn-default" style="display: inline; float: right;">X</button></li>
+         {% if favorite_weather is not defined %}
+         <ul class="list-group" style="display: none">
+         {% else %}
+         <ul class="list-group">
+             {% for zipcode, weather in favorite_weather.items() %}
+             <li class="list-group-item">{{weather.city}}<a href="/delete/{{zipcode}}" class="btn btn-default" style="display: inline; float: right;">X</a></li>
+             {% endfor %}
+         {% endif %}
          </ul>
 
          <p contenteditable="true">
@@ -71,7 +75,11 @@
                            </div>
                         </div>
                      </div>
-                      <a href="#" class="btn btn-primary">Add to favorites</a>   
+                     <form method="POST" action="/add/" class="form-inline my-2 my-lg-0">
+                         <input name="zipcode" type="hidden" value={{weather.zipcode}}>
+                         <input name="city" type="hidden" value={{weather.city}}>
+                         <button class="btn btn-primary" type="submit">Add to favorites</button>
+                     </form>
                     
                </div>
             </div>
