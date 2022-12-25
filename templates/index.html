@@ -29,19 +29,17 @@
                <li class="nav-item"></li>
             </ul>
             <form method="get"  action="/weather/" class="form-inline my-2 my-lg-0">
-                <input name="zipcode" class="form-control mr-sm-2" type="text" maxlength="5" placeholder="Zip Code" aria-label="Zip Code">
+                <input name="zipcode" class="form-control mr-sm-2" id="search-input" type="text" maxlength="5" placeholder="Zip Code" aria-label="Zip Code">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
          </div>
       </nav>
 
       <footer class="footer">
-         {% if favorite_weather is not defined %}
-         <ul class="list-group" style="display: none">
-         {% else %}
-         <ul class="list-group">
+         <ul class="list-group" id="favorite-weather-container" style="visibility: hidden; height: 0">
+         {% if favorite_weather is defined %}
              {% for zipcode, weather in favorite_weather.items() %}
-             <li class="list-group-item">{{weather.city}}<a href="/delete/{{zipcode}}" class="btn btn-default" style="display: inline; float: right;">X</a></li>
+             <li class="list-group-item"><a href="/weather/?zipcode={{zipcode}}">{{weather.city}}</a><a href="/delete/{{zipcode}}" class="btn btn-default" style="display: inline; float: right;">X</a></li>
              {% endfor %}
          {% endif %}
          </ul>
@@ -83,9 +81,26 @@
                     
                </div>
             </div>
-         </div>
          {% endif %}
+         </div>
       </footer>
    </div>
+   <script>
+      let searchInput = document.getElementById("search-input"); 
+      let favoriteWeather = document.getElementById("favorite-weather-container");
+
+      searchInput.addEventListener("input", showfavoriteWeather);
+      function showfavoriteWeather() {
+          if(searchInput.value.length > 0) {
+              favoriteWeather.style.visibility = "visible";
+              favoriteWeather.style.height     = "auto";
+          } else {
+              favoriteWeather.style.visibility = "hidden";
+              favoriteWeather.style.height     = "0";
+          }
+      }
+
+   </script>
 </body>
 </html>
+

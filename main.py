@@ -24,7 +24,9 @@ class FavoriteWeather(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("index.html", {"request": request,
+                                                     "favorite_weather":
+                                                     favorite_weather})
 
 @app.get("/weather/", response_class=HTMLResponse)
 async def get_zipcode_weather(request: Request, zipcode: str):
@@ -37,7 +39,9 @@ async def get_zipcode_weather(request: Request, zipcode: str):
                           "humidity": weather_data['main']['humidity'],
                           "wind": weather_data['wind']['speed'],
                           }
-    return templates.TemplateResponse("index.html", {"request": request, "weather": requested_weather})
+    
+    return templates.TemplateResponse("index.html", {"request": request, "weather": requested_weather,
+                                                     "favorite_weather": favorite_weather})
 
 @app.post("/add/", response_class=HTMLResponse)
 async def add_favorite_weather(request: Request, zipcode: str=Form(), city: str=Form()):
