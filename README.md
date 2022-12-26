@@ -4,10 +4,14 @@ Run the application
 Using docker:
 
 ```
+docker build -t <name> .
+```
+
+```
 docker run -p 80:8000 <name>
 ```
 
-Using docker-composer:
+Or using docker-composer:
 
 ```
 docker-compose up -d
